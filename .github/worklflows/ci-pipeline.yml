@@ -1,0 +1,25 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Workflow uruchomi się przy każdym pushu do gałęzi main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Używamy najnowszej wersji Ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Pobiera kod z repozytorium
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Określamy wersję Node.js, którą chcemy używać
+
+      - name: Install dependencies
+        run: npm install  # Instalowanie zależności aplikacji
+
+      - name: Run tests
+        run: npm test  # Uruchomienie testów
