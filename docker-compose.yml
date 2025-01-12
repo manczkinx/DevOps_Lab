@@ -1,0 +1,29 @@
+version: '3.8'  # Określa wersję pliku Docker Compose
+
+services:  # Definicja usług, które będą uruchomione w kontenerach
+  app:  # Nazwa usługi (np. aplikacja)
+    image: springboot-demo  # Nazwa obrazu lub zdefiniowana w pliku Dockerfile
+    ports:  # Mapowanie portów kontenera na porty hosta
+      - "8080:8080"  # mapowanie portu aplikacji
+    environment:  # Zmienne środowiskowe dla aplikacji (np. połączenie z bazą danych)
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/mydb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
+    networks:
+      - app-network  # Użycie wspólnej sieci
+    depends_on:
+      - mysql-db  # Zależność, aplikacja uruchomi się po mysql-db
+
+  mysql-db:  # Definicja usługi bazy danych
+    image: mysql:8.0  # Użycie obrazu MySQL
+    environment:  # Zmienne środowiskowe do konfiguracji bazy
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3306:3306"  # Mapowanie portu bazy danych
+    networks:
+      - app-network  # Podłączenie do tej samej sieci co aplikacja
+
+networks:  # Definicja wirtualnej sieci, w której będą połączone kontenery
+  app-network:
+    driver: bridge  # Domyślny driver sieci dla kontenerów
